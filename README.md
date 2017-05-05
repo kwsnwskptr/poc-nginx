@@ -20,9 +20,9 @@ Utworzenie podstawowego kontenerka o nazwie nginx-t01 na podstawie obrazu nginx 
 
 Chcielibyśmy jednak aby konfiguracja nginx była trzymana na hoście.
 
-`docker run --name nginx-t02 -p 8082:80 -v C:/docker/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx`
+`docker run --name nginx-t02 -p 8082:80 -v C:/poc/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx`
 
-gdzie wskazujemy konfiguracja na *C:/docker/.docker/nginx.conf*
+gdzie wskazujemy konfiguracja na *C:/poc/.docker/nginx.conf*
 
 Po uruchomieniu w przeglądarce strony *localhost:8082*, pojawi się ekran powitalny nginx-a
 ![welcome](welcome.png "nginx welcome")
@@ -32,7 +32,7 @@ Aby pozyskać przykładowy plik konfiguracyjny możesz go skopiować ze strony n
 
 `docker run --name tmp-container -d nginx`
 
-`docker cp tmp-container:/etc/nginx/nginx.conf C:/docker/.docker/nginx.conf`
+`docker cp tmp-container:/etc/nginx/nginx.conf C:/poc/.docker/nginx.conf`
 
 `docker rm --force tmp-container`
 
@@ -88,7 +88,7 @@ Aby zatrzymać kontener:
 
 Zacznijmy od zdefiniowania volumenów dla kontenera, mapując porty 80 z kontenera na 8081 i 8080 z kontenera na 8082, opcja –rm usunie kontener jeżeli już isntieje
 
-`docker run --rm --name nginx-t03 -p 8081:80 -p 8082:8080 -v C:/docker/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/docker/public_html:/usr/share/nginx/html:ro -d nginx`
+`docker run --rm --name nginx-t03 -p 8081:80 -p 8082:8080 -v C:/poc/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/poc/public_html:/usr/share/nginx/html:ro -d nginx`
 
 Skoro utworzyliśmy już kontener nginx-a, przejdźmy do konfiguracji
 
@@ -154,7 +154,7 @@ Kolejne zmiany konfiguracji wymagają restartu nginxa
 
 `docker restart nginx-t03`
 
-Tworząc kontener nginx podpięliśmy volumen *C:/docker/.docker/public_html* jako */usr/share/nginx/html/*, więc w naszej konfiguracji nginxa posługujemy się właśnie lokalizacją */usr/share/nginx/html/* jako root
+Tworząc kontener nginx podpięliśmy volumen *C:/poc/.docker/public_html* jako */usr/share/nginx/html/*, więc w naszej konfiguracji nginxa posługujemy się właśnie lokalizacją */usr/share/nginx/html/* jako root
 
 Poniżej struktura katalogów
 
@@ -186,7 +186,7 @@ Jedną z podstawowych zalet proxy jest możliwość skalowania infrastruktury. N
 
 Tworzymy sobie kolejny kontener
 
-`docker run -it --rm --name nginx-t04 -p 8091:80 -p 8092:8080 -p 8093:8070 -v C:/docker/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/docker/public_html:/usr/share/nginx/html:ro -d nginx`
+`docker run -it --rm --name nginx-t04 -p 8091:80 -p 8092:8080 -p 8093:8070 -v C:/poc/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/poc/public_html:/usr/share/nginx/html:ro -d nginx`
 
 W naszym prostym przykładnie obrazki (/images) będą serwowane z ze strony wystawionej na porcie 8093, a strona *localhost:8093* będzie proxowana na *localhost:8092*, więc w rezultacie powinniśmy zobaczyć kontent 2 z obrazkiem z 1. Powyższe numery portów są portami widocznymi z maszyny hosta, dla przypomnienia
 mapowanie w kontenerze: 8091->80,8092->8080, 8093->8070 (patrz powyżej)
@@ -243,7 +243,7 @@ Przy proxowaniu requestu należy jednak pamiętać o specyficznej obsłudze nag�
 
 Jako przykład uruchomimy 3 maszyny kolejno na portach 8095,8096 i 8097, przy czym maszyna na porcie 8097 będzie rozrzucała ruch na 8095 i 8096.
 
-`docker run -it --rm --name nginx-t05 -p 8095:8095 -p 8096:8096 -p 8097:8097 -v C:/docker/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/docker/public_html:/usr/share/nginx/html:ro -d nginx`
+`docker run -it --rm --name nginx-t05 -p 8095:8095 -p 8096:8096 -p 8097:8097 -v C:/poc/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/poc/public_html:/usr/share/nginx/html:ro -d nginx`
 
 Poniżej konfiguracja nginx (wewnątrz kontekstu http)
 
@@ -321,7 +321,7 @@ Jeżeli nie posiadasz httpasswd, utwórz maszynę
 
 Tworzymy sobie kolejną maszynę
 
-`docker run -it --rm --name nginx-t07 -p 8098:8098 -v C:/docker/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/docker/public_html:/usr/share/nginx/html:ro -d nginx`
+`docker run -it --rm --name nginx-t07 -p 8098:8098 -v C:/poc/.docker/nginx.conf:/etc/nginx/nginx.conf:ro -v C:/poc/public_html:/usr/share/nginx/html:ro -d nginx`
 
 wewnątrz maszyny tworzymy plik /usr/share/nginx/htpasswd z zawartością .htpasswd
 
